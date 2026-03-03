@@ -21,6 +21,7 @@ app.use('/api/auth', require('./routes/auth.routes'));
 app.use('/api/transactions', require('./routes/transaction.routes'));
 app.use('/api/budgets', require('./routes/budget.routes'));
 app.use('/api/notifications', require('./routes/notification.routes'));
+app.use(require('./middleware/errorHandler'));
 
 // Test route
 app.get('/', (req, res) => {
