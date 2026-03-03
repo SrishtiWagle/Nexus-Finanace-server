@@ -80,3 +80,42 @@ exports.refresh = async (req, res) => {
     res.json({ success: false, message: err.message });
   }
 };
+// Onboarding
+exports.onboard = async (req, res) => {
+  try {
+    const { income, currency, categories } = req.body;
+    const user = await User.findByIdAndUpdate(
+      req.userId,
+      { income, currency, categories },
+      { new: true }
+    );
+    res.json({ success: true, data: { income: user.income, currency: user.currency, categories: user.categories } });
+  } catch (err) {
+    res.json({ success: false, message: err.message });
+  }
+};
+
+// Get profile
+exports.getProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select('-password -refreshToken');
+    res.json({ success: true, data: user });
+  } catch (err) {
+    res.json({ success: false, message: err.message });
+  }
+};
+
+// Update profile
+exports.updateProfile = async (req, res) => {
+  try {
+    const { name, currency, categories } = req.body;
+    const user = await User.findByIdAndUpdate(
+      req.userId,
+      { name, currency, categories },
+      { new: true }
+    ).select('-password -refreshToken');
+    res.json({ success: true, data: user });
+  } catch (err) {
+    res.json({ success: false, message: err.message });
+  }
+};
