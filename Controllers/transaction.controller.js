@@ -83,3 +83,20 @@ exports.bulkDelete = async (req, res) => {
     res.json({ success: false, message: err.message });
   }
 };
+// CSV Export
+exports.exportCSV = async (req, res) => {
+  try {
+    const transactions = await Transaction.find({ user: req.userId }).sort({ date: -1 });
+
+    const header = 'Title,Amount,Type,Category,Date,Notes\n';
+    const rows = transactions.map(t =>
+      `"${t.title}",${t.amount},${t.type},${t.category},${new Date(t.date).toLocaleDateString()},"${t.notes}"`
+    ).join('\n');
+
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', 'attachment; filename=transactions.csv');
+    res.send(header + rows);
+  } catch (err) {
+    res.json({ success: false, message: err.message });
+  }
+};
